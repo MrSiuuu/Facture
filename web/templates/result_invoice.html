@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Résultat de la facture</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 2rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 1.5rem;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      th {
+        background-color: #f5f5f5;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .badge-success {
+        background-color: #d1fae5;
+        color: #065f46;
+      }
+      .badge-danger {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .anomalies {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        background: #fef2f2;
+        color: #991b1b;
+      }
+      .anomalies ul {
+        margin: 0.5rem 0 0;
+      }
+      .totaux {
+        margin-top: 1.5rem;
+      }
+      .section-title {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 1rem;
+        border-radius: 4px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Facture traitée : {{ invoice.numero }}</h1>
+
+    <p>
+      Décision :
+      {% if decision == "VALIDATED" %}
+        <span class="badge badge-success">VALIDATED</span>
+      {% else %}
+        <span class="badge badge-danger">REJECTED</span>
+      {% endif %}
+    </p>
+
+    {% if anomalies %}
+      <div class="anomalies">
+        <strong>Anomalies détectées :</strong>
+        <ul>
+          {% for a in anomalies %}
+            <li>{{ a }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <h2 class="section-title">Informations générales</h2>
+    <p>
+      Date d'émission : {{ invoice.date_emission }}<br />
+      Devise : {{ invoice.devise }}
+    </p>
+
+    <h2 class="section-title">Parties prenantes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rôle</th>
+          <th>Nom</th>
+          <th>Identifiant</th>
+          <th>Adresse</th>
+          <th>Pays</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vendeur</td>
+          <td>{{ invoice.seller.nom }}</td>
+          <td>{{ invoice.seller.identifiant }}</td>
+          <td>{{ invoice.seller.adresse }}</td>
+          <td>{{ invoice.seller.pays }}</td>
+        </tr>
+        <tr>
+          <td>Acheteur</td>
+          <td>{{ invoice.buyer.nom }}</td>
+          <td>{{ invoice.buyer.identifiant }}</td>
+          <td>{{ invoice.buyer.adresse }}</td>
+          <td>{{ invoice.buyer.pays }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Lignes de facture</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Description</th>
+          <th>Quantité</th>
+          <th>Prix unitaire</th>
+          <th>Montant HT</th>
+          <th>Taux TVA</th>
+          <th>Catégorie TVA</th>
+          <th>Motif exonération</th>
+          <th>TVA</th>
+          <th>TTC</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in invoice.lignes %}
+          <tr>
+            <td>{{ l.id_ligne }}</td>
+            <td>{{ l.description }}</td>
+            <td>{{ l.quantite }}</td>
+            <td>{{ "%.2f"|format(l.prix_unitaire) }}</td>
+            <td>{{ "%.2f"|format(l.montant_ht) }}</td>
+            <td>{{ "%.2f"|format(l.taux_tva) }} %</td>
+            <td>{{ l.categorie_tva }}</td>
+            <td>{{ l.motif_exoneration or "" }}</td>
+            <td>{{ "%.2f"|format(l.montant_tva()) }}</td>
+            <td>{{ "%.2f"|format(l.montant_ttc()) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totaux">
+      <h2 class="section-title">Totaux</h2>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Déclaré</th>
+            <th>Calculé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total HT</td>
+            <td>{{ "%.2f"|format(invoice.montants_declares.get("total_ht", 0.0)) }}</td>
+            <td>{{ "%.2f"|format(total_ht_calcule) }}</td>
+          </tr>
+          <tr>
+            <td>Total TVA</td>
+            <td>{{ "%.2f"|format(invoice.montants_declares.get("total_tva", 0.0)) }}</td>
+            <td>{{ "%.2f"|format(total_tva_calcule) }}</td>
+          </tr>
+          <tr>
+            <td>Total TTC</td>
+            <td>{{ "%.2f"|format(invoice.montants_declares.get("total_ttc", 0.0)) }}</td>
+            <td>{{ "%.2f"|format(total_ttc_calcule) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>TVA par taux</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Taux</th>
+            <th>Montant TVA (calculé)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for taux, montant in total_tva_par_taux.items() %}
+            <tr>
+              <td>{{ "%.2f"|format(taux) }} %</td>
+              <td>{{ "%.2f"|format(montant) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Résumé brut (debug)</h2>
+    <pre>{{ raw_content }}</pre>
+
+    <p>
+      {% if storage_id is defined and storage_id %}
+        <a href="{{ request.url_for('invoice_detail', storage_id=storage_id) }}">Voir le détail et le cycle de vie</a> |
+      {% endif %}
+      <a href="{{ request.url_for('upload_invoice') }}">Traiter une autre facture</a> |
+      <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
+    </p>
+  </body>
+  </html>
+

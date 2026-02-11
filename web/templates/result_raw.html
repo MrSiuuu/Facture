@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Résultat brut de la facture</title>
+    <style>
+      pre {
+        background: #f4f4f4;
+        padding: 1rem;
+        border-radius: 4px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Facture reçue : {{ filename }}</h1>
+    <p>Ceci est une première étape : affichage du contenu JSON brut.</p>
+    <pre>{{ raw_content }}</pre>
+    <p>
+      <a href="{{ request.url_for('upload_invoice') }}">Traiter une autre facture</a> |
+      <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
+    </p>
+  </body>
+  </html>
+

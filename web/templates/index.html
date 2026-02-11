@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PDP Facturation électronique</title>
+  </head>
+  <body>
+    <h1>PDP – Facturation électronique</h1>
+    <p>
+      Cette application permet de charger une facture électronique (JSON ou XML Factur-X),
+      de la modéliser et de lancer des contrôles métier.
+    </p>
+    <p>
+      <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
+      |
+      <a href="{{ request.url_for('invoices_list') }}">Liste des factures</a>
+    </p>
+  </body>
+  </html>
+

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CrossIndustryInvoice>
+  <ExchangedDocumentContext>
+    <GuidelineSpecifiedDocumentContextParameter>
+      <ID>F25-104332</ID>
+    </GuidelineSpecifiedDocumentContextParameter>
+  </ExchangedDocumentContext>
+  <ExchangedDocument>
+    <ID>FACT-LOY-2026-01-001</ID>
+    <Name>Facture de loyer</Name>
+    <TypeCode>380</TypeCode>
+    <IssueDateTime>
+      <DateTimeString format="102">20260105</DateTimeString>
+    </IssueDateTime>
+    <LanguageID>fr</LanguageID>
+    <IncludedNote>
+      <Content>Facture de loyer pour la période de Janvier 2026</Content>
+      <SubjectCode>REG</SubjectCode>
+    </IncludedNote>
+    <IncludedNote>
+      <Content>Paiement par virement bancaire sous 30 jours</Content>
+      <SubjectCode>PMT</SubjectCode>
+    </IncludedNote>
+  </ExchangedDocument>
+  <SupplyChainTradeTransaction>
+    <IncludedSupplyChainTradeLineItem>
+      <AssociatedDocumentLineDocument>
+        <LineID>1</LineID>
+      </AssociatedDocumentLineDocument>
+      <SpecifiedTradeProduct>
+        <Name>Loyer mensuel - Appartement 3 pièces</Name>
+        <Description>Location du logement situé au 15 Rue de la République, 75011 Paris - Appartement de 65m² au 3ème étage</Description>
+        <SellerAssignedID>LOY-MENS-001</SellerAssignedID>
+      </SpecifiedTradeProduct>
+      <SpecifiedLineTradeAgreement>
+        <NetPriceProductTradePrice>
+          <ChargeAmount>1155.62</ChargeAmount>
+          <BasisQuantity unitCode="MON">1</BasisQuantity>
+        </NetPriceProductTradePrice>
+      </SpecifiedLineTradeAgreement>
+      <SpecifiedLineTradeDelivery>
+        <BilledQuantity unitCode="MON">1</BilledQuantity>
+      </SpecifiedLineTradeDelivery>
+      <SpecifiedLineTradeSettlement>
+        <ApplicableTradeTax>
+          <TypeCode>VAT</TypeCode>
+          <CategoryCode>Z</CategoryCode>
+          <RateApplicablePercent>0.00</RateApplicablePercent>
+          <ExemptionReason>Exonération TVA - Location d'habitation nue</ExemptionReason>
+          <ExemptionReasonCode>VATEX-EU-G</ExemptionReasonCode>
+        </ApplicableTradeTax>
+        <SpecifiedTradeSettlementLineMonetarySummation>
+          <LineTotalAmount>1155.62</LineTotalAmount>
+        </SpecifiedTradeSettlementLineMonetarySummation>
+      </SpecifiedLineTradeSettlement>
+    </IncludedSupplyChainTradeLineItem>
+    <IncludedSupplyChainTradeLineItem>
+      <AssociatedDocumentLineDocument>
+        <LineID>2</LineID>
+      </AssociatedDocumentLineDocument>
+      <SpecifiedTradeProduct>
+        <Name>Provision sur charges - Eau froide et chaude</Name>
+        <Description>Provision mensuelle pour consommation d'eau froide et chaude sanitaire</Description>
+        <SellerAssignedID>PROV-EAU-001</SellerAssignedID>
+      </SpecifiedTradeProduct>
+      <SpecifiedLineTradeAgreement>
+        <NetPriceProductTradePrice>
+          <ChargeAmount>35.05</ChargeAmount>
+          <BasisQuantity unitCode="MON">1</BasisQuantity>
+        </NetPriceProductTradePrice>
+      </SpecifiedLineTradeAgreement>
+      <SpecifiedLineTradeDelivery>
+        <BilledQuantity unitCode="MON">1</BilledQuantity>
+      </SpecifiedLineTradeDelivery>
+      <SpecifiedLineTradeSettlement>
+        <ApplicableTradeTax>
+          <TypeCode>VAT</TypeCode>
+          <CategoryCode>S</CategoryCode>
+          <RateApplicablePercent>10.00</RateApplicablePercent>
+        </ApplicableTradeTax>
+        <SpecifiedTradeSettlementLineMonetarySummation>
+          <LineTotalAmount>35.05</LineTotalAmount>
+        </SpecifiedTradeSettlementLineMonetarySummation>
+      </SpecifiedLineTradeSettlement>
+    </IncludedSupplyChainTradeLineItem>
+    <IncludedSupplyChainTradeLineItem>
+      <AssociatedDocumentLineDocument>
+        <LineID>3</LineID>
+      </AssociatedDocumentLineDocument>
+      <SpecifiedTradeProduct>
+        <Name>Provision sur charges - Entretien parties communes</Name>
+        <Description>Provision mensuelle pour entretien, ménage et maintenance des parties communes</Description>
+        <SellerAssignedID>PROV-ENT-001</SellerAssignedID>
+      </SpecifiedTradeProduct>
+      <SpecifiedLineTradeAgreement>
+        <NetPriceProductTradePrice>
+          <ChargeAmount>70.98</ChargeAmount>
+          <BasisQuantity unitCode="MON">1</BasisQuantity>
+        </NetPriceProductTradePrice>
+      </SpecifiedLineTradeAgreement>
+      <SpecifiedLineTradeDelivery>
+        <BilledQuantity unitCode="MON">1</BilledQuantity>
+      </SpecifiedLineTradeDelivery>
+      <SpecifiedLineTradeSettlement>
+        <ApplicableTradeTax>
+          <TypeCode>VAT</TypeCode>
+          <CategoryCode>S</CategoryCode>
+          <RateApplicablePercent>20.00</RateApplicablePercent>
+        </ApplicableTradeTax>
+        <SpecifiedTradeSettlementLineMonetarySummation>
+          <LineTotalAmount>70.98</LineTotalAmount>
+        </SpecifiedTradeSettlementLineMonetarySummation>
+      </SpecifiedLineTradeSettlement>
+    </IncludedSupplyChainTradeLineItem>
+    <IncludedSupplyChainTradeLineItem>
+      <AssociatedDocumentLineDocument>
+        <LineID>4</LineID>
+      </AssociatedDocumentLineDocument>
+      <SpecifiedTradeProduct>
+        <Name>TEOM - Taxe d'enlèvement des ordures ménagères</Name>
+        <Description>Taxe mensuelle d'enlèvement des ordures ménagères - Ville de Paris</Description>
+        <SellerAssignedID>TEOM-001</SellerAssignedID>
+      </SpecifiedTradeProduct>
+      <SpecifiedLineTradeAgreement>
+        <NetPriceProductTradePrice>
+          <ChargeAmount>25.60</ChargeAmount>
+          <BasisQuantity unitCode="MON">1</BasisQuantity>
+        </NetPriceProductTradePrice>
+      </SpecifiedLineTradeAgreement>
+      <SpecifiedLineTradeDelivery>
+        <BilledQuantity unitCode="MON">1</BilledQuantity>
+      </SpecifiedLineTradeDelivery>
+      <SpecifiedLineTradeSettlement>
+        <ApplicableTradeTax>
+          <TypeCode>VAT</TypeCode>
+          <CategoryCode>Z</CategoryCode>
+          <RateApplicablePercent>0.00</RateApplicablePercent>
+          <ExemptionReason>Taxe locale - Non soumise à TVA</ExemptionReason>
+          <ExemptionReasonCode>VATEX-EU-O</ExemptionReasonCode>
+        </ApplicableTradeTax>
+        <SpecifiedTradeSettlementLineMonetarySummation>
+          <LineTotalAmount>25.60</LineTotalAmount>
+        </SpecifiedTradeSettlementLineMonetarySummation>
+      </SpecifiedLineTradeSettlement>
+    </IncludedSupplyChainTradeLineItem>
+    <ApplicableHeaderTradeAgreement>
+      <SellerTradeParty>
+        <ID>PROP-001</ID>
+        <Name>MARTIN Immobilier SARL</Name>
+        <DefinedTradeContact>
+          <PersonName>Pierre MARTIN</PersonName>
+          <TelephoneUniversalCommunication>
+            <CompleteNumber>+33 1 42 85 96 74</CompleteNumber>
+          </TelephoneUniversalCommunication>
+          <EmailURIUniversalCommunication>
+            <URIID>contact@martin-immobilier.fr</URIID>
+          </EmailURIUniversalCommunication>
+        </DefinedTradeContact>
+        <PostalTradeAddress>
+          <PostcodeCode>75008</PostcodeCode>
+          <LineOne>28 Avenue des Champs-Élysées</LineOne>
+          <CityName>Paris</CityName>
+          <CountryID>FR</CountryID>
+        </PostalTradeAddress>
+        <SpecifiedTaxRegistration>
+          <ID schemeID="VA">FR12345678901</ID>
+        </SpecifiedTaxRegistration>
+        <SpecifiedTaxRegistration>
+          <ID schemeID="FC">12345678901</ID>
+        </SpecifiedTaxRegistration>
+      </SellerTradeParty>
+      <BuyerTradeParty>
+        <ID>LOC-002</ID>
+        <Name>M. Karim BENALI</Name>
+        <DefinedTradeContact>
+          <PersonName>M. Karim BENALI</PersonName>
+          <TelephoneUniversalCommunication>
+            <CompleteNumber>+33 6 11 22 33 44</CompleteNumber>
+          </TelephoneUniversalCommunication>
+          <EmailURIUniversalCommunication>
+            <URIID>karim.benali@email.fr</URIID>
+          </EmailURIUniversalCommunication>
+        </DefinedTradeContact>
+        <PostalTradeAddress>
+          <PostcodeCode>75012</PostcodeCode>
+          <LineOne>8 Rue de Charenton, Apt 12</LineOne>
+          <LineTwo>2ème étage</LineTwo>
+          <CityName>Paris</CityName>
+          <CountryID>FR</CountryID>
+        </PostalTradeAddress>
+      </BuyerTradeParty>
+      <BuyerReference>BAIL-2023-LOC-002-75012</BuyerReference>
+      <ContractReferencedDocument>
+        <IssuerAssignedID>BAIL-15-REP-2023-001</IssuerAssignedID>
+        <FormattedIssueDateTime>
+          <DateTimeString format="102">20230315</DateTimeString>
+        </FormattedIssueDateTime>
+      </ContractReferencedDocument>
+    </ApplicableHeaderTradeAgreement>
+    <ApplicableHeaderTradeDelivery>
+      <ShipToTradeParty>
+        <Name>M. Karim BENALI</Name>
+        <PostalTradeAddress>
+          <PostcodeCode>75012</PostcodeCode>
+          <LineOne>8 Rue de Charenton, Apt 12</LineOne>
+          <LineTwo>2ème étage</LineTwo>
+          <CityName>Paris</CityName>
+          <CountryID>FR</CountryID>
+        </PostalTradeAddress>
+      </ShipToTradeParty>
+      <ActualDeliverySupplyChainEvent>
+        <OccurrenceDateTime>
+          <DateTimeString format="102">20260101</DateTimeString>
+        </OccurrenceDateTime>
+      </ActualDeliverySupplyChainEvent>
+      <BillingSpecifiedPeriod>
+        <StartDateTime>
+          <DateTimeString format="102">20260101</DateTimeString>
+        </StartDateTime>
+        <EndDateTime>
+          <DateTimeString format="102">20260131</DateTimeString>
+        </EndDateTime>
+        <Description>Période de location : Janvier 2026</Description>
+      </BillingSpecifiedPeriod>
+    </ApplicableHeaderTradeDelivery>
+    <ApplicableHeaderTradeSettlement>
+      <CreditorReferenceID>CRED-MARTIN-001</CreditorReferenceID>
+      <PaymentReference>G.1819.60</PaymentReference>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+      <SpecifiedTradeSettlementPaymentMeans>
+        <TypeCode>30</TypeCode>
+        <Information>Virement bancaire</Information>
+        <PayeePartyCreditorFinancialAccount>
+          <IBANID>FR76 1234 5678 9012 3456 78</IBANID>
+          <AccountName>MARTIN Immobilier SARL</AccountName>
+          <ProprietaryID>12345678901</ProprietaryID>
+        </PayeePartyCreditorFinancialAccount>
+        <PayeeSpecifiedCreditorFinancialInstitution>
+          <BICID>BNPAFRPPXXX</BICID>
+          <Name>BNP Paribas</Name>
+        </PayeeSpecifiedCreditorFinancialInstitution>
+      </SpecifiedTradeSettlementPaymentMeans>
+      <SpecifiedTradePaymentTerms>
+        <Description>Paiement à réception de facture, échéance 30 jours</Description>
+        <DueDateDateTime>
+          <DateTimeString format="102">20260204</DateTimeString>
+        </DueDateDateTime>
+      </SpecifiedTradePaymentTerms>
+      <ApplicableTradeTax>
+        <CalculatedAmount>3.50</CalculatedAmount>
+        <TypeCode>VAT</TypeCode>
+        <ExemptionReason>TVA sur provision eau</ExemptionReason>
+        <BasisAmount>35.05</BasisAmount>
+        <CategoryCode>S</CategoryCode>
+        <RateApplicablePercent>10.00</RateApplicablePercent>
+      </ApplicableTradeTax>
+      <ApplicableTradeTax>
+        <CalculatedAmount>14.20</CalculatedAmount>
+        <TypeCode>VAT</TypeCode>
+        <ExemptionReason>TVA sur provision entretien</ExemptionReason>
+        <BasisAmount>70.98</BasisAmount>
+        <CategoryCode>S</CategoryCode>
+        <RateApplicablePercent>20.00</RateApplicablePercent>
+      </ApplicableTradeTax>
+      <ApplicableTradeTax>
+        <CalculatedAmount>0.00</CalculatedAmount>
+        <TypeCode>VAT</TypeCode>
+        <ExemptionReason>Exonération TVA - Location d'habitation nue et TEOM</ExemptionReason>
+        <BasisAmount>1181.22</BasisAmount>
+        <CategoryCode>Z</CategoryCode>
+        <RateApplicablePercent>0.00</RateApplicablePercent>
+        <ExemptionReasonCode>VATEX-EU-G</ExemptionReasonCode>
+      </ApplicableTradeTax>
+      <BillingSpecifiedPeriod>
+        <StartDateTime>
+          <DateTimeString format="102">20260101</DateTimeString>
+        </StartDateTime>
+        <EndDateTime>
+          <DateTimeString format="102">20260131</DateTimeString>
+        </EndDateTime>
+        <Description>Période de facturation : Janvier 2026</Description>
+      </BillingSpecifiedPeriod>
+      <InvoiceReferencedDocument>
+        <IssuerAssignedID>FACT-LOY-2025-07-001</IssuerAssignedID>
+        <FormattedIssueDateTime>
+          <DateTimeString format="102">20250628</DateTimeString>
+        </FormattedIssueDateTime>
+      </InvoiceReferencedDocument>
+      <SpecifiedTradeSettlementHeaderMonetarySummation>
+        <LineTotalAmount>1287.25</LineTotalAmount>
+        <ChargeTotalAmount>0.00</ChargeTotalAmount>
+        <AllowanceTotalAmount>0.00</AllowanceTotalAmount>
+        <TaxBasisTotalAmount>1287.25</TaxBasisTotalAmount>
+        <TaxTotalAmount currencyID="EUR">17.70</TaxTotalAmount>
+        <RoundingAmount>0.00</RoundingAmount>
+        <GrandTotalAmount>1304.95</GrandTotalAmount>
+        <TotalPrepaidAmount>0.00</TotalPrepaidAmount>
+        <DuePayableAmount>1304.95</DuePayableAmount>
+      </SpecifiedTradeSettlementHeaderMonetarySummation>
+      <ReceivableSpecifiedTradeAccountingAccount>
+        <ID>411000</ID>
+        <TypeCode>1</TypeCode>
+      </ReceivableSpecifiedTradeAccountingAccount>
+    </ApplicableHeaderTradeSettlement>
+  </SupplyChainTradeTransaction>
+</CrossIndustryInvoice>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Liste des factures</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+      th { background-color: #f5f5f5; }
+      .badge { display: inline-block; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85rem; }
+      .badge-success { background: #d1fae5; color: #065f46; }
+      .badge-danger { background: #fee2e2; color: #991b1b; }
+      .badge-secondary { background: #e5e7eb; color: #374151; }
+    </style>
+  </head>
+  <body>
+    <h1>Liste des factures</h1>
+    <p>
+      <a href="{{ request.url_for('home') }}">Accueil</a> |
+      <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
+    </p>
+
+    {% if not items %}
+      <p>Aucune facture enregistrée. <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a> pour commencer.</p>
+    {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th>Numéro</th>
+            <th>Date</th>
+            <th>Vendeur</th>
+            <th>Acheteur</th>
+            <th>Décision</th>
+            <th>Statut</th>
+            <th>Ouverte / Payée</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sid, inv in items %}
+            <tr>
+              <td>{{ inv.numero }}</td>
+              <td>{{ inv.date_emission }}</td>
+              <td>{{ inv.seller.nom }}</td>
+              <td>{{ inv.buyer.nom }}</td>
+              <td>
+                {% if inv.decision == "VALIDATED" %}
+                  <span class="badge badge-success">VALIDATED</span>
+                {% else %}
+                  <span class="badge badge-danger">REJECTED</span>
+                {% endif %}
+              </td>
+              <td>{{ inv.lifecycle.current_status() or "—" }}</td>
+              <td>
+                {% if inv.lifecycle.is_paid() %}
+                  <span class="badge badge-secondary">Payée</span>
+                {% elif inv.lifecycle.is_open() %}
+                  <span class="badge badge-secondary">Ouverte</span>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ request.url_for('invoice_detail', storage_id=sid) }}">Détail</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </body>
+  </html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload facture JSON</title>
+  </head>
+  <body>
+    <h1>Charger une facture JSON</h1>
+    <form action="{{ request.url_for('process_invoice') }}" method="post" enctype="multipart/form-data">
+      <div>
+        <label for="file">Fichier facture (JSON ou XML Factur-X) :</label>
+        <input type="file" id="file" name="file" accept=".json,.xml,application/json,application/xml,text/xml" required />
+      </div>
+      <button type="submit">Traiter la facture</button>
+    </form>
+    <p>
+      <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
+    </p>
+  </body>
+  </html>
+
