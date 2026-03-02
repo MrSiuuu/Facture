@@ -1,29 +1,21 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.requests import Request
+from starlette.middleware.sessions import SessionMiddleware
 
 from web.routes import router as web_router
 
+# Clé secrète pour signer les cookies de session (à définir en prod via .env)
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me-in-production")
 
 app = FastAPI(title="PDP Facturation électronique")
 
-# Templates Jinja2 (pour les vues HTML)
-templates = Jinja2Templates(directory="web/templates")
+# Session : cookie signé, pas de BDD (déconnexion = tout perdu pour l'utilisateur)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
-
-@app.get("/", name="home")
-async def home(request: Request):
-    """
-    Page d'accueil minimale avec lien vers le formulaire d'upload.
-    """
-    return templates.TemplateResponse("index.html", {"request": request})
-
-
-# Inclusion des autres routes applicatives
+# Routes (accueil, login, logout, upload, factures) — voir web/routes.py
 app.include_router(web_router)
 
-
-# Optionnel : servir des fichiers statiques plus tard (CSS, JS…)
 app.mount("/static", StaticFiles(directory="web/static"), name="static")
 

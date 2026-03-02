@@ -1,4 +1,6 @@
 import json
+import os
+import uuid
 from datetime import datetime
 
 from fastapi import APIRouter, UploadFile, File, Request, Form, HTTPException
@@ -9,11 +11,93 @@ from core.models.lifecycle import InvoiceStatus
 from core.services.parser import parse_invoice_from_json
 from core.services.facturx_xml import facturx_xml_to_dict
 from core.services.validator import validate_invoice
-from core.services.invoice_store import add as store_add, get as store_get, list_all as store_list_all
+from core.services.invoice_store import (
+    add as store_add,
+    get as store_get,
+    list_all as store_list_all,
+    clear_session as store_clear_session,
+)
 
+# Identifiants de connexion (sans BDD) — configurables via .env
+LOGIN_USERNAME = os.getenv("LOGIN_USERNAME", "demo")
+LOGIN_PASSWORD = os.getenv("LOGIN_PASSWORD", "demo")
 
 router = APIRouter()
 templates = Jinja2Templates(directory="web/templates")
+
+
+def _require_auth(request: Request) -> str | RedirectResponse:
+    """
+    Retourne le session_id si l'utilisateur est connecté,
+    sinon une RedirectResponse vers /login.
+    """
+    if not request.session.get("user"):
+        return RedirectResponse(url="/login", status_code=302)
+    session_id = request.session.get("session_id")
+    if not session_id:
+        return RedirectResponse(url="/login", status_code=302)
+    return session_id
+
+
+# ---------- Login / Logout (sans BDD) ----------
+
+
+@router.get("/login", response_class=HTMLResponse, name="login")
+async def login_page(request: Request):
+    """Affiche le formulaire de connexion."""
+    if request.session.get("user"):
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request, "error": None},
+    )
+
+
+@router.post("/login", name="login_submit")
+async def login_submit(
+    request: Request,
+    username: str = Form(..., alias="username"),
+    password: str = Form(..., alias="password"),
+):
+    """Vérifie les identifiants et crée la session (cookie signé)."""
+    if request.session.get("user"):
+        return RedirectResponse(url="/", status_code=302)
+
+    if username != LOGIN_USERNAME or password != LOGIN_PASSWORD:
+        return templates.TemplateResponse(
+            "login.html",
+            {
+                "request": request,
+                "error": "Identifiant ou mot de passe incorrect.",
+            },
+            status_code=401,
+        )
+
+    request.session["user"] = username
+    request.session["session_id"] = str(uuid.uuid4())
+    return RedirectResponse(url="/", status_code=302)
+
+
+@router.get("/logout", name="logout")
+async def logout_page(request: Request):
+    """Déconnexion : suppression des factures de la session + vidage du cookie."""
+    session_id = request.session.get("session_id")
+    if session_id:
+        store_clear_session(session_id)
+    request.session.clear()
+    return RedirectResponse(url="/login", status_code=302)
+
+
+# ---------- Routes protégées (accueil, upload, factures) ----------
+
+
+@router.get("/", response_class=HTMLResponse, name="home")
+async def home(request: Request):
+    """Page d'accueil (après connexion)."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 def _load_invoice_data(raw_content: str, filename: str | None) -> tuple[dict | None, str | None]:
@@ -39,9 +123,10 @@ def _load_invoice_data(raw_content: str, filename: str | None) -> tuple[dict | N
 
 @router.get("/upload", response_class=HTMLResponse, name="upload_invoice")
 async def upload_page(request: Request):
-    """
-    Affiche le formulaire d'upload de facture (JSON ou XML Factur-X).
-    """
+    """Formulaire d'upload de facture (JSON ou XML Factur-X)."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
     return templates.TemplateResponse("upload.html", {"request": request})
 
 
@@ -50,13 +135,12 @@ async def process_invoice(
     request: Request,
     file: UploadFile = File(..., description="Fichier JSON ou XML Factur-X"),
 ):
-    """
-    Traite le fichier uploadé (JSON ou XML Factur-X) :
-    - parse en dictionnaire Python (conformément à l'énoncé),
-    - construit l'objet Invoice,
-    - applique les règles de validation métier/fiscales,
-    - affiche un résumé complet de la facture.
-    """
+    """Traite le fichier uploadé et enregistre la facture dans la session."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
+    session_id = auth
+
     content_bytes = await file.read()
     raw_content = content_bytes.decode("utf-8", errors="replace")
 
@@ -82,8 +166,8 @@ async def process_invoice(
         message="Facture reçue et traitée par la PDP",
     )
 
-    # Enregistrement en mémoire pour liste et détail
-    storage_id = store_add(invoice)
+    # Enregistrement en mémoire (par session)
+    storage_id = store_add(invoice, session_id)
 
     # Calculs utiles pour l'affichage
     total_ht_calcule = invoice.total_ht_calcule()
@@ -111,10 +195,11 @@ async def process_invoice(
 
 @router.get("/invoices", response_class=HTMLResponse, name="invoices_list")
 async def invoices_list(request: Request):
-    """
-    Liste des factures déjà traitées (stockées en mémoire).
-    """
-    items = store_list_all()
+    """Liste des factures de la session en cours."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
+    items = store_list_all(auth)
     return templates.TemplateResponse(
         "invoices_list.html",
         {"request": request, "items": items},
@@ -123,11 +208,11 @@ async def invoices_list(request: Request):
 
 @router.get("/invoices/{storage_id}", response_class=HTMLResponse, name="invoice_detail")
 async def invoice_detail(request: Request, storage_id: str):
-    """
-    Détail d'une facture + cycle de vie (historique, is_open, is_paid, check_lifecycle)
-    + formulaire pour ajouter un statut.
-    """
-    invoice = store_get(storage_id)
+    """Détail d'une facture + cycle de vie + formulaire ajout de statut."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
+    invoice = store_get(storage_id, auth)
     if invoice is None:
         raise HTTPException(status_code=404, detail="Facture introuvable")
 
@@ -166,10 +251,11 @@ async def invoice_add_status(
     statut: str = Form(..., description="Nouveau statut"),
     message: str = Form("", description="Message optionnel"),
 ):
-    """
-    Ajoute un changement de statut à la facture, puis redirige vers le détail.
-    """
-    invoice = store_get(storage_id)
+    """Ajoute un statut à la facture puis redirige vers le détail."""
+    auth = _require_auth(request)
+    if isinstance(auth, RedirectResponse):
+        return auth
+    invoice = store_get(storage_id, auth)
     if invoice is None:
         raise HTTPException(status_code=404, detail="Facture introuvable")
 

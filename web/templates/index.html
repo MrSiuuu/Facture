@@ -2,19 +2,38 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PDP Facturation électronique</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
-    <h1>PDP – Facturation électronique</h1>
-    <p>
-      Cette application permet de charger une facture électronique (JSON ou XML Factur-X),
-      de la modéliser et de lancer des contrôles métier.
-    </p>
-    <p>
-      <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
-      |
-      <a href="{{ request.url_for('invoices_list') }}">Liste des factures</a>
-    </p>
+    <div class="page">
+      <header class="app-header">
+        <div class="container">
+          <div class="brand"><a href="{{ request.url_for('home') }}">PDP Facturation</a></div>
+          <nav>
+            <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
+            <a href="{{ request.url_for('invoices_list') }}">Liste des factures</a>
+            <a href="{{ request.url_for('logout') }}" class="logout">Se déconnecter</a>
+          </nav>
+        </div>
+      </header>
+      <main>
+        <div class="container">
+          <h1>Facturation électronique</h1>
+          <div class="card">
+            <p>
+              Chargez une facture au format <strong>JSON</strong> ou <strong>XML Factur-X</strong>,
+              la plateforme la modélise, applique les contrôles métier et fiscaux,
+              et vous affiche le résultat avec le cycle de vie.
+            </p>
+            <div class="action-bar">
+              <a href="{{ request.url_for('upload_invoice') }}" class="btn btn--primary">Charger une facture</a>
+              <a href="{{ request.url_for('invoices_list') }}" class="btn btn--secondary">Voir les factures</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
   </html>
-

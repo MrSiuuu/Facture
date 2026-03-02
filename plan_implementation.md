@@ -19,9 +19,9 @@ Ce document décrit **ce qui est déjà fait** et **ce qui reste à faire**, en 
 | §9 Bonus : moteur validation (règles, erreurs, décision) | ✅ | `validator.py` (validate_invoice) |
 | §10 Cycle de vie : statut/date/message, historique, délais, `is_open()`, `is_paid()`, `check_lifecycle()` | ✅ Cœur métier | `core/models/lifecycle.py` |
 
-**Manque côté énoncé :** pas encore d’**interface** pour « ajouter un statut », « voir l’historique » ni pour « liste / détail des factures » (énoncé + plan.md).
+L’**interface** cycle de vie est en place : ajout de statut, historique, liste et détail des factures (stockage en mémoire).
 
-### 1.2 Plan.md — couvert partiellement
+### 1.2 Plan.md — couvert (sauf BDD et rapport)
 
 | Élément plan | Statut |
 |--------------|--------|
@@ -29,38 +29,24 @@ Ce document décrit **ce qui est déjà fait** et **ce qui reste à faire**, en 
 | Architecture app / core / web (pas encore infra) | ✅ |
 | 4.1 Upload facture (JSON ou XML) + lecture + objets + validations | ✅ |
 | 4.2 Affichage : infos, vendeur, acheteur, lignes, totaux déclarés/recalculés, anomalies, décision | ✅ |
-| 4.3 Cycle de vie : **ajouter statut, voir historique, vérifier délais** | ❌ Pas encore dans l’interface |
-| 4.4 Liste des factures (déjà traitées) | ❌ Pas encore |
+| 4.3 Cycle de vie : ajouter statut, voir historique, vérifier délais | ✅ (store + routes + templates) |
+| 4.4 Liste des factures (déjà traitées) | ✅ (en mémoire) |
 | 5.1–5.4 Modèles Party, InvoiceLine, Invoice, Lifecycle + méthodes | ✅ |
-| 6. Services : Parser, Calculator (dans Invoice), Validator, Lifecycle checker | ✅ |
+| 6. Services : Parser, Calculator (dans Invoice), Validator, Lifecycle checker + invoice_store | ✅ |
 | 7. Base de données (infra, tables) | ❌ |
-| 8. Routes : GET /, POST /process | ✅ |
-| 8. Routes : GET /invoices, GET /invoices/{id}, POST /invoices/{id}/status | ❌ |
+| 8. Routes : GET /, POST /process, GET /invoices, GET /invoices/{id}, POST /invoices/{id}/status | ✅ |
 
 ---
 
 ## 2. Ce qui reste à faire (ordre recommandé)
 
-### Priorité 1 — Cycle de vie + liste/détail (sans BDD)
+### Priorité 1 — Cycle de vie + liste/détail (sans BDD) — ✅ FAIT
 
-1. **Stockage en mémoire des factures traitées**  
-   - Après `POST /process`, enregistrer l’`Invoice` dans un dict global (ou par session) : `id → Invoice`.  
-   - Permet de délivrer tout de suite les routes suivantes.
-
-2. **GET /invoices**  
-   - Afficher la liste des factures traitées (numéro, date, vendeur, acheteur, décision, statut actuel).  
-   - Template `invoices_list.html`.
-
-3. **GET /invoices/{id}**  
-   - Page détail d’une facture : même contenu que la page résultat actuelle + **historique des statuts** + résultat de `check_lifecycle()` + indicateurs `is_open()` / `is_paid()`.  
-   - Template `invoice_detail.html` (ou réutiliser `result_invoice.html` avec bloc « cycle de vie »).
-
-4. **POST /invoices/{id}/status**  
-   - Formulaire ou appel pour **ajouter un changement de statut** (RECEIVED, VALIDATED, MISE_EN_PAIEMENT, PAYEE, REJECTED) avec message optionnel.  
-   - Appeler `invoice.lifecycle.add_status(statut, date, message)`, puis réafficher le détail (ou rediriger vers GET /invoices/{id}).
-
-5. **Premier statut à la réception**  
-   - Lors du `POST /process`, ajouter automatiquement un statut initial (ex. RECEIVED) avec la date courante pour que le cycle de vie soit visible tout de suite.
+1. ~~Stockage en mémoire~~ → `core/services/invoice_store.py` + enregistrement après POST /process.  
+2. ~~GET /invoices~~ → `invoices_list.html`.  
+3. ~~GET /invoices/{id}~~ → `invoice_detail.html` (détail + historique + is_open / is_paid / check_lifecycle).  
+4. ~~POST /invoices/{id}/status~~ → formulaire + redirection vers le détail.  
+5. ~~Premier statut RECEIVED~~ → ajouté automatiquement à la réception.
 
 ### Priorité 2 — Base de données (plan.md §7 + §8)
 
@@ -86,19 +72,18 @@ Ce document décrit **ce qui est déjà fait** et **ce qui reste à faire**, en 
 
 ## 3. Récap : ce qui reste (liste courte)
 
-| # | Tâche | Réf. énoncé / plan |
-|---|--------|---------------------|
-| 1 | Stockage en mémoire des factures après POST /process | plan §4.4, §8 |
-| 2 | GET /invoices (liste) | plan §4.4, §8 |
-| 3 | GET /invoices/{id} (détail + cycle de vie) | plan §4.2, §4.3, §8 |
-| 4 | POST /invoices/{id}/status (ajout statut) | plan §4.3, §8 |
-| 5 | Afficher historique des statuts + is_open / is_paid / check_lifecycle dans l’UI | énoncé §10, plan §4.3 |
-| 6 | Infra BDD : infra/db.py, repositories.py, tables | plan §7 |
-| 7 | Brancher routes sur PostgreSQL/Supabase | plan §7, §8 |
-| 8 | Rapport écrit | énoncé consignes, plan §11 |
+| # | Tâche | Statut |
+|---|--------|--------|
+| 1–5 | Stockage mémoire, GET /invoices, GET /invoices/{id}, POST …/status, affichage cycle de vie | ✅ Fait |
+| 6 | Infra BDD : infra/db.py, repositories.py, tables | ❌ À faire |
+| 7 | Brancher routes sur PostgreSQL/Supabase | ❌ À faire |
+| 8 | Rapport écrit (métier, classes, règles, anomalies, cycle de vie) | ❌ À faire |
+| 9 | Tests manuels complets | Optionnel |
 
 ---
 
 ## 4. Prochaine action recommandée
 
-Enchaîner sur **Priorité 1** : stockage en mémoire + GET /invoices + GET /invoices/{id} + POST /invoices/{id}/status + affichage du cycle de vie dans les templates. Ensuite seulement BDD + rapport.
+Pour **livrer le TP** : le cœur métier + l’interface (upload, liste, détail, cycle de vie) sont en place. Il reste au choix :
+- **Option A** : rédiger le **rapport** (obligatoire pour le rendu) ; la BDD peut rester pour plus tard.
+- **Option B** : ajouter l’**infra BDD** (plan §7) puis le rapport.

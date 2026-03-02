@@ -2,24 +2,39 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Résultat brut de la facture</title>
-    <style>
-      pre {
-        background: #f4f4f4;
-        padding: 1rem;
-        border-radius: 4px;
-        white-space: pre-wrap;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Erreur — {{ filename }}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
-    <h1>Facture reçue : {{ filename }}</h1>
-    <p>Ceci est une première étape : affichage du contenu JSON brut.</p>
-    <pre>{{ raw_content }}</pre>
-    <p>
-      <a href="{{ request.url_for('upload_invoice') }}">Traiter une autre facture</a> |
-      <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
-    </p>
+    <div class="page">
+      <header class="app-header">
+        <div class="container">
+          <div class="brand"><a href="{{ request.url_for('home') }}">PDP Facturation</a></div>
+          <nav>
+            <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
+            <a href="{{ request.url_for('invoices_list') }}">Liste des factures</a>
+            <a href="{{ request.url_for('logout') }}" class="logout">Se déconnecter</a>
+          </nav>
+        </div>
+      </header>
+      <main>
+        <div class="container">
+          <h1>Fichier reçu : {{ filename }}</h1>
+          {% if error %}
+            <div class="alert alert--danger">
+              <strong>Erreur</strong><br />{{ error }}
+            </div>
+          {% else %}
+            <p>Contenu brut du fichier (JSON/XML).</p>
+          {% endif %}
+          <pre class="pre">{{ raw_content }}</pre>
+          <div class="action-bar content-links">
+            <a href="{{ request.url_for('upload_invoice') }}">Traiter une autre facture</a>
+            <a href="{{ request.url_for('home') }}">Accueil</a>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
   </html>
-

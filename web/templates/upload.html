@@ -2,20 +2,40 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Upload facture JSON</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Charger une facture — PDP</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
-    <h1>Charger une facture JSON</h1>
-    <form action="{{ request.url_for('process_invoice') }}" method="post" enctype="multipart/form-data">
-      <div>
-        <label for="file">Fichier facture (JSON ou XML Factur-X) :</label>
-        <input type="file" id="file" name="file" accept=".json,.xml,application/json,application/xml,text/xml" required />
-      </div>
-      <button type="submit">Traiter la facture</button>
-    </form>
-    <p>
-      <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
-    </p>
+    <div class="page">
+      <header class="app-header">
+        <div class="container">
+          <div class="brand"><a href="{{ request.url_for('home') }}">PDP Facturation</a></div>
+          <nav>
+            <a href="{{ request.url_for('upload_invoice') }}">Charger une facture</a>
+            <a href="{{ request.url_for('invoices_list') }}">Liste des factures</a>
+            <a href="{{ request.url_for('logout') }}" class="logout">Se déconnecter</a>
+          </nav>
+        </div>
+      </header>
+      <main>
+        <div class="container">
+          <h1>Charger une facture</h1>
+          <div class="card">
+            <p>Envoyez un fichier <strong>JSON</strong> ou <strong>XML Factur-X</strong>. Il sera parsé, validé et enregistré dans votre session.</p>
+            <form action="{{ request.url_for('process_invoice') }}" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="file">Fichier facture (JSON ou XML Factur-X)</label>
+                <input type="file" id="file" name="file" accept=".json,.xml,application/json,application/xml,text/xml" required />
+              </div>
+              <button type="submit" class="btn btn--primary">Traiter la facture</button>
+            </form>
+            <div class="action-bar">
+              <a href="{{ request.url_for('home') }}">Retour à l'accueil</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
   </html>
-
