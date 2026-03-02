@@ -435,6 +435,21 @@ pre, .pre {
   text-decoration: underline;
 }
 
+/* Footer */
+.app-footer {
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
+  padding: var(--space) var(--space-lg);
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.app-footer a {
+  color: rgba(248, 250, 252, 0.9);
+  text-decoration: none;
+}
+
 /* Responsive: mobile nav */
 @media (max-width: 600px) {
   .app-header .container {
